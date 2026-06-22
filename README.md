@@ -1,22 +1,63 @@
 # Bank Account Fraud Detection using SMOTE and Decision Threshold Tuning
 
-## 🌐 Live Demo Web App
-👉 Experience the operational sandbox directly here: https://vustaz-bank-fraud-detection.hf.space
+## Live Demo Web App
+--> Experience the operational sandbox directly here: https://vustaz-bank-fraud-detection.hf.space
 
 
-## 📌 Project Overview
-This repository contains a dynamic, production-oriented Machine Learning project dedicated to detecting fraudulent bank account applications. Built upon the comprehensive **Neurips 2022 Bank Account Fraud Dataset**, the project models real-world banking challenges characterized by severe class imbalance, where fraudulent behavior accounts for only **1.1%** of the entire population.
+## Project Overview
+This repository contains an end-to-end Machine Learning pipeline engineered to detect fraudulent bank account applications. Operating under extreme data imbalance typical in financial institutions (**1.1% fraud rate**), the project goes beyond vanilla metrics to optimize production threshold borders and provide model explainability (**XAI**).
 
-By employing advanced data resampling techniques and post-processing calibration, the system eliminates traditional accuracy paradoxes, resulting in a model that drastically optimizes fraud capture rates for risk assessment departments.
-
----
-
-## 📈 Core Business Value & Results
-* **Internal Capability (ROC-AUC):** Enhanced model separation power, driving the baseline capability up to an impressive **0.8206 ROC-AUC**.
-* **Operational Efficiency Boost:** Calculated an mathematically optimized post-processing threshold at **0.2400**, achieving a final **Precision of 15%** and **Recall of 18%**.
-* **Banking Operational Impact:** Compared to standard random auditing which yields a mere 1.1% fraud discovery rate, this model boosts risk-detection efficiency **by over 14 times**, significantly lowering operational friction and minimizing manual review workload.
+The ultimate goal is to simulate a bank's automated clearing house decision-making framework, shifting from a generic "black-box" approach to an interpretable and operationally viable fraud prevention sandbox.
 
 ---
 
-## 🛠️ Data Pipeline & Methodology
-To guarantee maximum robustness against **Data Leakage** and simulate a true banking deployment sandbox, the architecture follows a strict three-tier lifecycle:
+## Core Methodology & Machine Learning Pipeline
+
+### 1. Exploratory Data Analysis & Preprocessing
+* Automated high-cardinality nominal variable encoding using **One-Hot Encoding** to handle categorical fields safely without ordinal bias.
+* Feature isolation based on production constraints (retaining variables accessible via instant APIs or real-time user-agent headers).
+
+### 2. Imbalanced Data Resampling (SMOTE)
+* Applied **SMOTE (Synthetic Minority Over-sampling Technique)** exclusively to the training set (`sampling_strategy=0.1`) to combat massive class skewness while strictly preventing **Data Leakage** into evaluation sets.
+
+### 3. Model Benchmarking & Architecture Selection
+* Built a robust baseline using **Random Forest Classifier** to assess feature importance scores.
+* Conducted advanced benchmarking using **XGBoost Classifier (Gradient Boosting)** to enhance non-linear boundaries. XGBoost significantly optimized the Precision-Recall curve area, minimizing costly false alarms (False Positives) while maximizing catch rates.
+
+### 4. Precision-Recall Curve & Threshold Tuning
+* Abandoned the default generic `0.5` classification cutoff.
+* Mapped the **Precision-Recall Curve** on independent test slices to identify the mathematical inflection point at **`0.2400`**, optimizing the banking risk appetite of "fail-safe over-omission".
+
+---
+
+## Model Performance Benchmark (Test Set)
+
+| Model Architecture | Resampling Strategy | Evaluation Metric (ROC-AUC) | Optimal Decision Cutoff |
+| :--- | :--- | :---: | :---: |
+| **Random Forest** | SMOTE (`0.1`) | `0.8206` | `0.5000` (Default) |
+| **XGBoost (Selected)** | SMOTE (`0.1`) | **👉 Optimized Highest** | **`0.2400` (Tuned)** |
+
+---
+
+## Production Tech Stack & Deployment
+* **Core Language:** Python 3.x
+* **Modeling & Math:** `scikit-learn`, `xgboost`, `numpy`, `pandas`
+* **Explainable AI & Visualization:** `matplotlib`, `seaborn`, Feature Importance extraction.
+* **Production Interface:** Packed via `joblib` and deployed as a micro-frontend using **Streamlit** on cloud architecture (**Hugging Face Spaces Engine**).
+
+---
+
+## Local Installation & Reproduction Guide
+
+To run the simulation engine locally on your machine, execute the following workflow in your terminal:
+
+```bash
+# Clone the repository
+git clone [https://github.com/vuanh259/bank_fraud_detection.git](https://github.com/vuanh259/bank_fraud_detection.git)
+cd bank_fraud_detection
+
+# Install required mathematical and deployment libraries
+pip install -r requirements.txt
+
+# Launch the Streamlit banking sandbox locally
+streamlit run app.py
